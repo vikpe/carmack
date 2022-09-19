@@ -72,8 +72,43 @@ func (b *Bot) RegisterCommands() {
 	}
 
 	b.session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-		if handler, ok := b.commandHandlers[i.ApplicationCommandData().Name]; ok {
-			handler(s, i)
+		switch i.Type {
+		case discordgo.InteractionApplicationCommand:
+			if handler, ok := b.commandHandlers[i.ApplicationCommandData().Name]; ok {
+				handler(s, i)
+			}
+
+		case discordgo.InteractionApplicationCommandAutocomplete:
+			optionMap := toOptionsMap(i.ApplicationCommandData().Options)
+
+			var choices []*discordgo.ApplicationCommandOptionChoice
+
+			if optionMap["address"].Focused {
+				customValue := optionMap["address"].StringValue()
+				choices = []*discordgo.ApplicationCommandOptionChoice{
+					{Name: "qw.foppa.dk:27501", Value: "qw.foppa.dk:27501"},
+					{Name: "qw.foppa.dk:27502", Value: "qw.foppa.dk:27502"},
+					{Name: "qw.foppa.dk:27503", Value: "qw.foppa.dk:27503"},
+					{Name: "qw.foppa.dk:27504", Value: "qw.foppa.dk:27504"},
+					{Name: "qw.foppa.dk:27505", Value: "qw.foppa.dk:27505"},
+				}
+				if customValue != "" {
+					choices = append(choices, &discordgo.ApplicationCommandOptionChoice{
+						Name:  customValue,
+						Value: "choice_custom",
+					})
+				}
+			}
+
+			err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionApplicationCommandAutocompleteResult,
+				Data: &discordgo.InteractionResponseData{
+					Choices: choices,
+				},
+			})
+			if err != nil {
+				panic(err)
+			}
 		}
 	})
 }
@@ -121,10 +156,11 @@ func main() {
 		Description: "server command",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
-				Type:        discordgo.ApplicationCommandOptionString,
-				Name:        "address",
-				Description: "Server address",
-				Required:    true,
+				Type:         discordgo.ApplicationCommandOptionString,
+				Name:         "address",
+				Description:  "Server address",
+				Required:     true,
+				Autocomplete: true,
 			},
 		},
 	}, func(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -141,6 +177,7 @@ func main() {
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
+				Flags:   discordgo.MessageFlagsEphemeral,
 				Content: responseContent,
 			},
 		})
