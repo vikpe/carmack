@@ -1,13 +1,17 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/go-resty/resty/v2"
 	"github.com/joho/godotenv"
+	"github.com/vikpe/serverstat/qserver/mvdsv"
 )
 
 type Bot struct {
@@ -112,16 +116,64 @@ func main() {
 	}
 
 	bot.AddCommand(&discordgo.ApplicationCommand{
-		Name:        "ping",
-		Description: "ping command",
+		Name:        "server",
+		Description: "server command",
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "address",
+				Description: "Server address",
+				Required:    true,
+			},
+		},
 	}, func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		optionMap := toOptionsMap(i.ApplicationCommandData().Options)
+		server, err := GetServerInfo(optionMap["address"].StringValue())
+		responseContent := ""
+
+		if err != nil {
+			responseContent = err.Error()
+		} else {
+			responseContent = fmt.Sprintf("%s - %s", server.Address, server.Title)
+		}
+
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
-				Content: "Hey there! Congratulations, you just executed your first slash command",
+				Content: responseContent,
 			},
 		})
 	})
 
 	bot.Start() // blocking operation
+}
+
+func toOptionsMap(options []*discordgo.ApplicationCommandInteractionDataOption) map[string]*discordgo.ApplicationCommandInteractionDataOption {
+	optionMap := make(map[string]*discordgo.ApplicationCommandInteractionDataOption, len(options))
+	for _, opt := range options {
+		optionMap[opt.Name] = opt
+	}
+
+	return optionMap
+}
+
+func GetServerInfo(address string) (*mvdsv.Mvdsv, error) {
+	url := fmt.Sprintf("https://hubapi.quakeworld.nu/v2/servers/%s", address)
+	resp, err := resty.New().R().SetResult(&mvdsv.Mvdsv{}).Get(url)
+
+	if err != nil {
+		err = errors.New("unable to fetch server information")
+	}
+
+	if resp.StatusCode() != http.StatusOK {
+		err = errors.New(resp.String())
+	}
+
+	if err != nil {
+		return &mvdsv.Mvdsv{}, err
+	}
+
+	server := resp.Result().(*mvdsv.Mvdsv)
+
+	return server, nil
 }
