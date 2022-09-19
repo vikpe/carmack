@@ -179,27 +179,21 @@ func main() {
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
+				Flags:   discordgo.MessageFlagsEphemeral,
 				Content: fmt.Sprintf("%s is playing at %s (%s)", playerName, server.Address, server.Title),
 				/*Components: []discordgo.MessageComponent{
 					discordgo.ActionsRow{
 						Components: []discordgo.MessageComponent{
 							discordgo.Button{
-								Emoji: discordgo.ComponentEmoji{Name: "📜"},
-								Label: "Play",
-								Style: discordgo.LinkButton,
-								URL:   fmt.Sprintf("qw://%s/play", server.Address),
+								Label:    "No",
+								Style:    discordgo.DangerButton,
+								Disabled: false,
+								CustomID: "fd_no",
 							},
 							discordgo.Button{
-								Emoji: discordgo.ComponentEmoji{Name: "🔧"},
-								Label: "Spectate",
+								Label: "FTP link",
 								Style: discordgo.LinkButton,
-								URL:   fmt.Sprintf("qw://%s/observe", server.Address),
-							},
-							discordgo.Button{
-								Emoji: discordgo.ComponentEmoji{Name: "🦫"},
-								Label: "QTV",
-								Style: discordgo.LinkButton,
-								URL:   fmt.Sprintf("qw://%s", server.QtvStream.Address),
+								URL:   "ftp://foo.bar:21",
 							},
 						},
 					},
