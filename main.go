@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/go-resty/resty/v2"
@@ -145,6 +146,68 @@ func main() {
 		})
 	})
 
+	bot.AddCommand(&discordgo.ApplicationCommand{
+		Name:        "find",
+		Description: "find player",
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionString,
+				Name:        "name",
+				Description: "Player name",
+				Required:    true,
+			},
+		},
+	}, func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		optionMap := toOptionsMap(i.ApplicationCommandData().Options)
+		playerName := optionMap["name"].StringValue()
+		server, err := FindPlayer(playerName)
+
+		if err != nil {
+			log.Println("ERROR", err)
+
+			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: err.Error(),
+				}})
+
+			return
+		}
+
+		log.Println("SUCCESS", err)
+
+		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: fmt.Sprintf("%s is playing at %s (%s)", playerName, server.Address, server.Title),
+				/*Components: []discordgo.MessageComponent{
+					discordgo.ActionsRow{
+						Components: []discordgo.MessageComponent{
+							discordgo.Button{
+								Emoji: discordgo.ComponentEmoji{Name: "📜"},
+								Label: "Play",
+								Style: discordgo.LinkButton,
+								URL:   fmt.Sprintf("qw://%s/play", server.Address),
+							},
+							discordgo.Button{
+								Emoji: discordgo.ComponentEmoji{Name: "🔧"},
+								Label: "Spectate",
+								Style: discordgo.LinkButton,
+								URL:   fmt.Sprintf("qw://%s/observe", server.Address),
+							},
+							discordgo.Button{
+								Emoji: discordgo.ComponentEmoji{Name: "🦫"},
+								Label: "QTV",
+								Style: discordgo.LinkButton,
+								URL:   fmt.Sprintf("qw://%s", server.QtvStream.Address),
+							},
+						},
+					},
+				},*/
+			},
+		})
+	})
+
 	bot.Start() // blocking operation
 }
 
@@ -176,4 +239,37 @@ func GetServerInfo(address string) (*mvdsv.Mvdsv, error) {
 	server := resp.Result().(*mvdsv.Mvdsv)
 
 	return server, nil
+}
+
+func GetMvdsvServers(queryParams map[string]string) []mvdsv.Mvdsv {
+	serversUrl := "https://hubapi.quakeworld.nu/v2/servers/mvdsv"
+	resp, err := resty.New().R().SetResult([]mvdsv.Mvdsv{}).SetQueryParams(queryParams).Get(serversUrl)
+
+	if err != nil {
+		fmt.Println("server fetch error", err.Error())
+		return make([]mvdsv.Mvdsv, 0)
+	}
+
+	servers := resp.Result().(*[]mvdsv.Mvdsv)
+	return *servers
+}
+
+func FindPlayer(pattern string) (mvdsv.Mvdsv, error) {
+	const minFindLength = 2
+
+	if len(pattern) < minFindLength {
+		return mvdsv.Mvdsv{}, errors.New(fmt.Sprintf(`provide at least %d characters.`, minFindLength))
+	}
+
+	if !strings.Contains(pattern, "*") {
+		pattern = fmt.Sprintf("*%s*", pattern)
+	}
+
+	servers := GetMvdsvServers(map[string]string{"has_player": pattern})
+
+	if 0 == len(servers) {
+		return mvdsv.Mvdsv{}, errors.New(fmt.Sprintf(`player "%s" not found.`, pattern))
+	}
+
+	return servers[0], nil
 }
