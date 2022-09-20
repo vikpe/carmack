@@ -66,6 +66,7 @@ func (b *Bot) Start() {
 }
 
 func (b *Bot) RegisterCommands() {
+	log.Println("RegisterCommands()")
 	for _, v := range b.commands {
 		_, err := b.session.ApplicationCommandCreate(b.session.State.User.ID, b.guildID, v)
 		if err != nil {
@@ -116,7 +117,7 @@ func (b *Bot) RegisterCommands() {
 }
 
 func (b *Bot) UnregisterCommands() {
-	log.Println("Removing commands...")
+	log.Println("UnregisterCommands()")
 
 	registeredCommands, err := b.session.ApplicationCommands(b.session.State.User.ID, b.guildID)
 	if err != nil {
