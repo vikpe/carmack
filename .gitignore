@@ -1,3 +1,4 @@
 .idea/
 .env
-./carmack
+carmack
+!internal/pkg/carmack
