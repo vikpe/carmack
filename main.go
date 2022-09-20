@@ -42,15 +42,17 @@ func NewBot(token string, guildId string) (*Bot, error) {
 }
 
 func (b *Bot) Start() {
+	log.Println("Start()")
+
+	b.session.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
+		b.OnReady(s)
+	})
+
 	err := b.session.Open()
 	if err != nil {
 		log.Fatalf("Cannot open the session: %v", err)
 	}
 	defer b.session.Close()
-
-	b.session.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
-		b.OnReady(s)
-	})
 
 	b.RegisterCommands()
 
