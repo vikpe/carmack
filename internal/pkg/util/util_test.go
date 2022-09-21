@@ -8,6 +8,18 @@ import (
 	"github.com/vikpe/carmack/internal/pkg/util"
 )
 
+func TestToOptionsMap(t *testing.T) {
+	options := []*discordgo.ApplicationCommandInteractionDataOption{
+		{Name: "foo"},
+		{Name: "bar"},
+	}
+	expect := map[string]*discordgo.ApplicationCommandInteractionDataOption{
+		"foo": options[0],
+		"bar": options[1],
+	}
+	assert.Equal(t, expect, util.ToOptionsMap(options))
+}
+
 func TestContainsAllSubstrings(t *testing.T) {
 	assert.False(t, util.ContainsAllSubstrings("qw.foppa.dk:27501", []string{"foo"}))
 	assert.False(t, util.ContainsAllSubstrings("qw.foppa.dk:27501", []string{"foppa", "3"}))
