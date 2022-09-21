@@ -28,21 +28,23 @@ func GetHandler(sstat *serverstat.Client) discordbot.CommandHandler {
 	return func(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
 		optionMap := util.ToOptionsMap(i.ApplicationCommandData().Options)
 		serverInfo, err := sstat.GetInfo(optionMap["address"].StringValue())
-		responseContent := ""
+
+		response := &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Flags: discordgo.MessageFlagsEphemeral,
+			},
+		}
+
+		if err != nil {
+			response.Data.Content = err.Error()
+		}
 
 		if serverInfo.Version.IsMvdsv() {
 			server := convert.ToMvdsv(serverInfo)
-			responseContent = fmt.Sprintf("%s - %s", server.Address, server.Title)
+			response.Data.Content = fmt.Sprintf("%s - %s", server.Address, server.Title)
 		}
 
-		responseContent = util.StringOrError(responseContent, err)
-
-		return &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Flags:   discordgo.MessageFlagsEphemeral,
-				Content: responseContent,
-			},
-		}
+		return response
 	}
 }

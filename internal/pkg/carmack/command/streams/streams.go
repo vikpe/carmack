@@ -4,7 +4,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/vikpe/carmack/internal/pkg/carmack/embed"
 	"github.com/vikpe/carmack/internal/pkg/hub"
-	"github.com/vikpe/carmack/internal/pkg/util"
 )
 
 var Command = &discordgo.ApplicationCommand{
@@ -15,14 +14,16 @@ var Command = &discordgo.ApplicationCommand{
 func Handler(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
 	streams, err := hub.Streams()
 
+	response := &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Flags: discordgo.MessageFlagsEphemeral,
+		},
+	}
+
 	if 0 == len(streams) {
-		return &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Flags:   discordgo.MessageFlagsEphemeral,
-				Content: util.StringOrError("No streams found.", err),
-			},
-		}
+		response.Data.Content = err.Error()
+		return response
 	}
 
 	embeds := make([]*discordgo.MessageEmbed, 0)
@@ -31,11 +32,6 @@ func Handler(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
 		embeds = append(embeds, embed.FromStream(stream))
 	}
 
-	return &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseChannelMessageWithSource,
-		Data: &discordgo.InteractionResponseData{
-			Flags:  discordgo.MessageFlagsEphemeral,
-			Embeds: embeds,
-		},
-	}
+	response.Data.Embeds = embeds
+	return response
 }

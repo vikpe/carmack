@@ -8,14 +8,6 @@ import (
 	"github.com/vikpe/carmack/internal/pkg/util"
 )
 
-func TestStringOrError(t *testing.T) {
-	// todo
-}
-
-func TestToOptionsMap(t *testing.T) {
-	// todo
-}
-
 func TestToOptionsChoice(t *testing.T) {
 	t.Run("no values", func(t *testing.T) {
 		option := []string{}

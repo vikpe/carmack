@@ -15,14 +15,6 @@ func ToOptionsMap(options []*discordgo.ApplicationCommandInteractionDataOption) 
 	return optionMap
 }
 
-func StringOrError(str string, err error) string {
-	if err != nil {
-		return err.Error()
-	}
-
-	return str
-}
-
 func ContainsAllSubstrings(haystack string, needles []string) bool {
 	for _, needle := range needles {
 		if !strings.Contains(haystack, needle) {
