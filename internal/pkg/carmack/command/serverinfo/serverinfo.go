@@ -11,7 +11,7 @@ import (
 
 var Command = &discordgo.ApplicationCommand{
 	Name:        "server",
-	Description: "server command",
+	Description: "Server info",
 	Options: []*discordgo.ApplicationCommandOption{
 		{
 			Type:         discordgo.ApplicationCommandOptionString,
