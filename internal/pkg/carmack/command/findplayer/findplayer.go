@@ -25,16 +25,19 @@ func Handler(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
 	optionMap := util.ToOptionsMap(i.ApplicationCommandData().Options)
 	playerName := optionMap["name"].StringValue()
 	server, err := hub.FindPlayerOnServer(playerName)
-	responseContent := util.StringOrError(
-		fmt.Sprintf("%s is playing at %s (%s)", playerName, server.Address, server.Title),
-		err,
-	)
 
-	return &discordgo.InteractionResponse{
+	response := &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
-			Flags:   discordgo.MessageFlagsEphemeral,
-			Content: responseContent,
+			Flags: discordgo.MessageFlagsEphemeral,
 		},
 	}
+
+	if err != nil {
+		response.Data.Content = err.Error()
+		return response
+	}
+
+	response.Data.Content = fmt.Sprintf("%s is playing at %s (%s)", playerName, server.Address, server.Title)
+	return response
 }
