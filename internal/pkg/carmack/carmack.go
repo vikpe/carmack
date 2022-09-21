@@ -4,6 +4,7 @@ import (
 	"github.com/vikpe/carmack/internal/pkg/carmack/autocomplete"
 	"github.com/vikpe/carmack/internal/pkg/carmack/command/findplayer"
 	"github.com/vikpe/carmack/internal/pkg/carmack/command/serverinfo"
+	"github.com/vikpe/carmack/internal/pkg/carmack/command/streams"
 	"github.com/vikpe/carmack/internal/pkg/discordbot"
 	"github.com/vikpe/serverstat"
 )
@@ -18,6 +19,7 @@ func New(token string, guildID string) (*Carmack, error) {
 	statClient := serverstat.NewClient()
 	bot.AddCommand(serverinfo.Command, serverinfo.GetHandler(statClient))
 	bot.AddCommand(findplayer.Command, findplayer.Handler)
+	bot.AddCommand(streams.Command, streams.Handler)
 	bot.AddAutocompleteHandler("address", autocomplete.ServerAddress)
 
 	return &Carmack{

@@ -41,3 +41,26 @@ func FindPlayerOnServer(pattern string) (mvdsv.Mvdsv, error) {
 
 	return servers[0], nil
 }
+
+type Stream struct {
+	Channel       string `json:"channel"`
+	Url           string `json:"url"`
+	Title         string `json:"title"`
+	ViewerCount   int    `json:"viewers"`
+	Language      string `json:"language"`
+	ClientName    string `json:"client_name"`
+	ServerAddress string `json:"server_address"`
+}
+
+func Streams() ([]Stream, error) {
+	serversUrl := "https://hubapi.quakeworld.nu/v2/streams"
+	resp, err := resty.New().R().SetResult([]Stream{}).Get(serversUrl)
+
+	if err != nil {
+		fmt.Println("server fetch error", err.Error())
+		return make([]Stream, 0), err
+	}
+
+	streams := resp.Result().(*[]Stream)
+	return *streams, nil
+}
