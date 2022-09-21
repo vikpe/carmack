@@ -7,27 +7,22 @@ import (
 	"github.com/vikpe/carmack/internal/pkg/util"
 )
 
-func ServerAddress(option *discordgo.ApplicationCommandInteractionDataOption) []*discordgo.ApplicationCommandOptionChoice {
-	var choices []*discordgo.ApplicationCommandOptionChoice
+func ServerAddress(option *discordgo.ApplicationCommandInteractionDataOption) [][]string {
+	var choices [][]string
 	inputValue := option.StringValue()
 
 	if inputValue != "" {
-		choices = append(choices, &discordgo.ApplicationCommandOptionChoice{
-			Name:  inputValue,
-			Value: "choice_custom",
-		})
+		choices = append(choices, []string{inputValue, "choice_custom"})
 	}
 
-	for _, address := range GetServerAddresses(inputValue) {
-		choices = append(choices, &discordgo.ApplicationCommandOptionChoice{
-			Name: address, Value: address,
-		})
+	for _, address := range getServerAddresses(inputValue) {
+		choices = append(choices, []string{address, address})
 	}
 
 	return choices
 }
 
-func GetServerAddresses(needle string) []string {
+func getServerAddresses(needle string) []string {
 	if "" == needle {
 		return make([]string, 0)
 	}

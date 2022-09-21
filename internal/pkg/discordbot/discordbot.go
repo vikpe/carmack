@@ -10,7 +10,7 @@ import (
 	"github.com/vikpe/carmack/internal/pkg/util"
 )
 
-type AutocompleteHandler func(option *discordgo.ApplicationCommandInteractionDataOption) []*discordgo.ApplicationCommandOptionChoice
+type AutocompleteHandler func(option *discordgo.ApplicationCommandInteractionDataOption) [][]string
 
 type CommandHandler func(i *discordgo.InteractionCreate) *discordgo.InteractionResponse
 
@@ -103,7 +103,7 @@ func (b *Bot) RegisterCommands() {
 				err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 					Type: discordgo.InteractionApplicationCommandAutocompleteResult,
 					Data: &discordgo.InteractionResponseData{
-						Choices: choices,
+						Choices: util.ToOptionChoices(choices),
 					},
 				})
 				if err != nil {
