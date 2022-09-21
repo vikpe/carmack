@@ -24,7 +24,7 @@ var Command = &discordgo.ApplicationCommand{
 func Handler(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
 	optionMap := util.ToOptionsMap(i.ApplicationCommandData().Options)
 	playerName := optionMap["name"].StringValue()
-	server, err := hub.FindPlayerOnServer(playerName)
+	server, err := hub.NewClient().FindPlayer(playerName)
 
 	response := &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,

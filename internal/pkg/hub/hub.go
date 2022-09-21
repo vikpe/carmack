@@ -9,20 +9,33 @@ import (
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 )
 
-func GetMvdsvServers(queryParams map[string]string) []mvdsv.Mvdsv {
-	serversUrl := "https://hubapi.quakeworld.nu/v2/servers/mvdsv"
-	resp, err := resty.New().R().SetResult([]mvdsv.Mvdsv{}).SetQueryParams(queryParams).Get(serversUrl)
+type Client struct {
+	resty *resty.Client
+}
+
+func NewClient() *Client {
+	restyClient := resty.New()
+	restyClient.SetBaseURL("https://hubapi.quakeworld.nu/v2")
+	return &Client{resty: restyClient}
+}
+
+func (c *Client) MvdsvServers(queryParams map[string]string) ([]mvdsv.Mvdsv, error) {
+	resp, err := c.resty.R().SetResult([]mvdsv.Mvdsv{}).SetQueryParams(queryParams).Get("servers/mvdsv")
 
 	if err != nil {
 		fmt.Println("server fetch error", err.Error())
-		return make([]mvdsv.Mvdsv, 0)
+		return make([]mvdsv.Mvdsv, 0), err
+	}
+
+	if resp.IsError() {
+		return make([]mvdsv.Mvdsv, 0), errors.New(resp.Status())
 	}
 
 	servers := resp.Result().(*[]mvdsv.Mvdsv)
-	return *servers
+	return *servers, nil
 }
 
-func FindPlayerOnServer(pattern string) (mvdsv.Mvdsv, error) {
+func (c *Client) FindPlayer(pattern string) (mvdsv.Mvdsv, error) {
 	const minFindLength = 2
 
 	if len(pattern) < minFindLength {
@@ -33,7 +46,7 @@ func FindPlayerOnServer(pattern string) (mvdsv.Mvdsv, error) {
 		pattern = fmt.Sprintf("*%s*", pattern)
 	}
 
-	servers := GetMvdsvServers(map[string]string{"has_player": pattern})
+	servers, _ := c.MvdsvServers(map[string]string{"has_player": pattern})
 
 	if 0 == len(servers) {
 		return mvdsv.Mvdsv{}, errors.New(fmt.Sprintf(`player "%s" not found.`, pattern))
@@ -52,15 +65,16 @@ type Stream struct {
 	ServerAddress string `json:"server_address"`
 }
 
-func Streams() ([]Stream, error) {
-	serversUrl := "https://hubapi.quakeworld.nu/v2/streams"
-	resp, err := resty.New().R().SetResult([]Stream{}).Get(serversUrl)
+func (c *Client) Streams() ([]Stream, error) {
+	resp, err := c.resty.R().SetResult([]Stream{}).Get("streams")
 
 	if err != nil {
-		fmt.Println("server fetch error", err.Error())
 		return make([]Stream, 0), err
 	}
 
-	streams := resp.Result().(*[]Stream)
-	return *streams, nil
+	if resp.IsError() {
+		return make([]Stream, 0), errors.New(resp.Status())
+	}
+
+	return *resp.Result().(*[]Stream), nil
 }

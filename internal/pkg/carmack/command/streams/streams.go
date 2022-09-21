@@ -12,7 +12,7 @@ var Command = &discordgo.ApplicationCommand{
 }
 
 func Handler(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
-	streams, err := hub.Streams()
+	streams, err := hub.NewClient().Streams()
 
 	response := &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
