@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/vikpe/carmack/internal/pkg/carmack/embed"
 	"github.com/vikpe/carmack/internal/pkg/hub"
 	"github.com/vikpe/carmack/internal/pkg/util"
 )
@@ -38,6 +39,7 @@ func Handler(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
 		return response
 	}
 
-	response.Data.Content = fmt.Sprintf("%s is playing at %s (%s)", playerName, server.Address, server.Title)
+	response.Data.Content = fmt.Sprintf("%s is playing", playerName)
+	response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromMvdsvServer(server)}
 	return response
 }
