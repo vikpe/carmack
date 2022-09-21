@@ -8,6 +8,13 @@ import (
 	"github.com/vikpe/carmack/internal/pkg/util"
 )
 
+func TestContainsAllSubstrings(t *testing.T) {
+	assert.False(t, util.ContainsAllSubstrings("qw.foppa.dk:27501", []string{"foo"}))
+	assert.False(t, util.ContainsAllSubstrings("qw.foppa.dk:27501", []string{"foppa", "3"}))
+	assert.True(t, util.ContainsAllSubstrings("qw.foppa.dk:27501", []string{"foppa"}))
+	assert.True(t, util.ContainsAllSubstrings("qw.foppa.dk:27501", []string{"foppa", "2"}))
+}
+
 func TestToOptionsChoice(t *testing.T) {
 	t.Run("no values", func(t *testing.T) {
 		option := []string{}
