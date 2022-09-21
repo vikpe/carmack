@@ -1,9 +1,8 @@
 package streams
 
 import (
-	"fmt"
-
 	"github.com/bwmarrin/discordgo"
+	"github.com/vikpe/carmack/internal/pkg/carmack/embed"
 	"github.com/vikpe/carmack/internal/pkg/hub"
 	"github.com/vikpe/carmack/internal/pkg/util"
 )
@@ -26,27 +25,17 @@ func Handler(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
 		}
 	}
 
-	components := make([]discordgo.MessageComponent, 0)
+	embeds := make([]*discordgo.MessageEmbed, 0)
 
-	for _, s := range streams {
-		label := fmt.Sprintf("%s - %s (%d viewers)\n", s.Channel, s.Title, s.ViewerCount)
-		components = append(components,
-			discordgo.ActionsRow{
-				Components: []discordgo.MessageComponent{
-					discordgo.Button{
-						Style: discordgo.LinkButton,
-						Label: label,
-						URL:   s.Url,
-					},
-				},
-			})
+	for _, stream := range streams {
+		embeds = append(embeds, embed.FromStream(stream))
 	}
 
 	return &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
-			Flags:      discordgo.MessageFlagsEphemeral,
-			Components: components,
+			Flags:  discordgo.MessageFlagsEphemeral,
+			Embeds: embeds,
 		},
 	}
 }
