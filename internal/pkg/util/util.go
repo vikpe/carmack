@@ -32,3 +32,32 @@ func ContainsAllSubstrings(haystack string, needles []string) bool {
 
 	return true
 }
+
+func ToOptionChoices(options [][]string) []*discordgo.ApplicationCommandOptionChoice {
+	choices := make([]*discordgo.ApplicationCommandOptionChoice, 0)
+
+	for _, opt := range options {
+		choices = append(choices, ToOptionsChoice(opt))
+	}
+
+	return choices
+}
+
+func ToOptionsChoice(option []string) *discordgo.ApplicationCommandOptionChoice {
+	choice := &discordgo.ApplicationCommandOptionChoice{Name: "", Value: ""}
+	optionLen := len(option)
+
+	if 0 == optionLen {
+		return choice
+	}
+
+	choice.Name = option[0]
+
+	if 1 == optionLen {
+		choice.Value = choice.Name
+	} else {
+		choice.Value = option[1]
+	}
+
+	return choice
+}
