@@ -2,3 +2,4 @@
 .env
 carmack
 !internal/pkg/carmack
+coverage.out
