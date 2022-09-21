@@ -21,8 +21,13 @@ func Handler(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
 		},
 	}
 
-	if 0 == len(streams) {
+	if err != nil {
 		response.Data.Content = err.Error()
+		return response
+	}
+
+	if 0 == len(streams) {
+		response.Data.Content = "No streams found."
 		return response
 	}
 
