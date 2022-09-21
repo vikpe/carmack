@@ -14,7 +14,7 @@ const colorPurple = 0xa970ff
 const colorBlue = 0x0c2aac
 
 func FromMvdsvServer(server mvdsv.Mvdsv) *discordgo.MessageEmbed {
-	hostname := server.Settings.Get("parsed_hostname", server.Address)
+	hostname := server.Settings.Get("hostname_parsed", server.Address)
 	title := fmt.Sprintf(":flag_%s: %s", strings.ToLower(server.Geo.CC), hostname)
 
 	embed := &discordgo.MessageEmbed{
