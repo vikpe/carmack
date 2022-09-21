@@ -18,7 +18,9 @@ require (
 	github.com/jpillora/longestcommon v0.0.0-20161227235612-adb9d91ee629 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/ssoroka/slice v0.0.0-20220402005549-78f0cea3df8b // indirect
+	github.com/valyala/fastjson v1.6.3 // indirect
 	github.com/vikpe/udpclient v0.1.3 // indirect
+	github.com/vikpe/wildcard v0.1.0 // indirect
 	golang.org/x/crypto v0.0.0-20220919173607-35f4265a4bc0 // indirect
 	golang.org/x/exp v0.0.0-20220921023135-46d9e7742f1e // indirect
 	golang.org/x/net v0.0.0-20220920203100-d0c6ba3f52d9 // indirect
