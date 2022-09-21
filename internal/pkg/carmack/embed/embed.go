@@ -8,6 +8,8 @@ import (
 	"github.com/vikpe/carmack/internal/pkg/hub"
 )
 
+const colorPurple = 0xa970ff
+
 func FromStream(stream hub.Stream) *discordgo.MessageEmbed {
 	thumbSize := "428x240"
 	thumbUrl := fmt.Sprintf(
@@ -19,6 +21,7 @@ func FromStream(stream hub.Stream) *discordgo.MessageEmbed {
 		Title:       stream.Channel,
 		URL:         stream.Url,
 		Description: stream.Title,
+		Color:       colorPurple,
 		Thumbnail:   &discordgo.MessageEmbedThumbnail{URL: thumbUrl},
 		Fields: []*discordgo.MessageEmbedField{
 			{

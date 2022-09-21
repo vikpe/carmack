@@ -22,6 +22,7 @@ func TestFromStream(t *testing.T) {
 		Title:       stream.Channel,
 		URL:         stream.Url,
 		Description: stream.Title,
+		Color:       0xa970ff,
 		Thumbnail: &discordgo.MessageEmbedThumbnail{
 			URL: "https://static-cdn.jtvnw.net/previews-ttv/live_user_quakeworld-428x240.jpg",
 		},
