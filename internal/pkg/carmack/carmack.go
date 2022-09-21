@@ -2,8 +2,10 @@ package carmack
 
 import (
 	"github.com/vikpe/carmack/internal/pkg/carmack/autocomplete"
-	"github.com/vikpe/carmack/internal/pkg/carmack/command"
+	"github.com/vikpe/carmack/internal/pkg/carmack/command/findplayer"
+	"github.com/vikpe/carmack/internal/pkg/carmack/command/serverinfo"
 	"github.com/vikpe/carmack/internal/pkg/discordbot"
+	"github.com/vikpe/serverstat"
 )
 
 type Carmack struct {
@@ -13,9 +15,12 @@ type Carmack struct {
 func New(token string, guildID string) (*Carmack, error) {
 	bot, err := discordbot.New(token, guildID)
 
-	bot.AddCommand(command.ServerInfo())
-	bot.AddCommand(command.FindPlayer())
+	statClient := serverstat.NewClient()
+	bot.AddCommand(serverinfo.Command, serverinfo.GetHandler(statClient))
+	bot.AddCommand(findplayer.Command, findplayer.Handler)
 	bot.AddAutocompleteHandler("address", autocomplete.ServerAddress)
 
-	return &Carmack{Bot: *bot}, err
+	return &Carmack{
+		Bot: *bot,
+	}, err
 }

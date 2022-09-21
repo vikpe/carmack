@@ -3,33 +3,11 @@ package hub
 import (
 	"errors"
 	"fmt"
-	"net/http"
 	"strings"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 )
-
-func GetServerInfo(address string) (*mvdsv.Mvdsv, error) {
-	url := fmt.Sprintf("https://hubapi.quakeworld.nu/v2/servers/%s", address)
-	resp, err := resty.New().R().SetResult(&mvdsv.Mvdsv{}).Get(url)
-
-	if err != nil {
-		err = errors.New("unable to fetch server information")
-	}
-
-	if resp.StatusCode() != http.StatusOK {
-		err = errors.New(resp.String())
-	}
-
-	if err != nil {
-		return &mvdsv.Mvdsv{}, err
-	}
-
-	server := resp.Result().(*mvdsv.Mvdsv)
-
-	return server, nil
-}
 
 func GetMvdsvServers(queryParams map[string]string) []mvdsv.Mvdsv {
 	serversUrl := "https://hubapi.quakeworld.nu/v2/servers/mvdsv"

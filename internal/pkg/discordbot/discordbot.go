@@ -12,7 +12,7 @@ import (
 
 type AutocompleteHandler func(option *discordgo.ApplicationCommandInteractionDataOption) []*discordgo.ApplicationCommandOptionChoice
 
-type CommandHandler func(s *discordgo.Session, i *discordgo.InteractionCreate)
+type CommandHandler func(i *discordgo.InteractionCreate) *discordgo.InteractionResponse
 
 type Bot struct {
 	session              *discordgo.Session
@@ -68,10 +68,10 @@ func (b *Bot) Start() {
 
 func (b *Bot) RegisterCommands() {
 	log.Println("RegisterCommands()")
-	for _, v := range b.commands {
-		_, err := b.session.ApplicationCommandCreate(b.session.State.User.ID, b.guildID, v)
+	for _, command := range b.commands {
+		_, err := b.session.ApplicationCommandCreate(b.session.State.User.ID, b.guildID, command)
 		if err != nil {
-			log.Panicf("Cannot create '%s' command: %s", v.Name, err)
+			log.Panicf("Cannot create '%s' command: %s", command.Name, err)
 		}
 	}
 
@@ -79,7 +79,12 @@ func (b *Bot) RegisterCommands() {
 		switch i.Type {
 		case discordgo.InteractionApplicationCommand:
 			if handler, ok := b.commandHandlers[i.ApplicationCommandData().Name]; ok {
-				handler(s, i)
+				interactionResponse := handler(i)
+				err := s.InteractionRespond(i.Interaction, interactionResponse)
+				if err != nil {
+					log.Fatal(err)
+					return
+				}
 			}
 
 		case discordgo.InteractionApplicationCommandAutocomplete:
@@ -108,7 +113,6 @@ func (b *Bot) RegisterCommands() {
 			} else {
 				log.Println(fmt.Sprintf(`no autocomplete handler defined for "%s"`, commandDataName))
 			}
-
 		}
 	})
 }
@@ -131,7 +135,7 @@ func (b *Bot) UnregisterCommands() {
 	}
 }
 
-func (b *Bot) AddCommand(command *discordgo.ApplicationCommand, handler func(s *discordgo.Session, i *discordgo.InteractionCreate)) {
+func (b *Bot) AddCommand(command *discordgo.ApplicationCommand, handler CommandHandler) {
 	b.commands = append(b.commands, command)
 	b.commandHandlers[command.Name] = handler
 }
