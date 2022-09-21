@@ -8,7 +8,7 @@ import (
 )
 
 func ServerAddress(option *discordgo.ApplicationCommandInteractionDataOption) [][]string {
-	var choices [][]string
+	choices := make([][]string, 0)
 	inputValue := option.StringValue()
 
 	if inputValue != "" {
@@ -33,7 +33,7 @@ func getServerAddresses(needle string) []string {
 
 	var result []string
 	words := strings.Split(needle, " ")
-	const maxResults = 10
+	const maxResults = 20
 
 	for _, address := range all {
 		if !util.ContainsAllSubstrings(address, words) {
