@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/go-playground/assert/v2"
+	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/carmack/internal/pkg/carmack/autocomplete"
 )
 
