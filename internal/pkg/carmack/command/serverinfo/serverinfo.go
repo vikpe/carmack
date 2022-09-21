@@ -1,9 +1,8 @@
 package serverinfo
 
 import (
-	"fmt"
-
 	"github.com/bwmarrin/discordgo"
+	"github.com/vikpe/carmack/internal/pkg/carmack/embed"
 	"github.com/vikpe/carmack/internal/pkg/discordbot"
 	"github.com/vikpe/carmack/internal/pkg/util"
 	"github.com/vikpe/serverstat"
@@ -42,7 +41,7 @@ func GetHandler(sstat *serverstat.Client) discordbot.CommandHandler {
 
 		if serverInfo.Version.IsMvdsv() {
 			server := convert.ToMvdsv(serverInfo)
-			response.Data.Content = fmt.Sprintf("%s - %s", server.Address, server.Title)
+			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromMvdsvServer(server)}
 		}
 
 		return response
