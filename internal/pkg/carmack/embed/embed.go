@@ -17,21 +17,27 @@ func FromStream(stream hub.Stream) *discordgo.MessageEmbed {
 		strings.ToLower(stream.Channel), thumbSize,
 	)
 
-	return &discordgo.MessageEmbed{
+	embed := &discordgo.MessageEmbed{
 		Title:       stream.Channel,
 		URL:         stream.Url,
 		Description: stream.Title,
 		Color:       colorPurple,
 		Thumbnail:   &discordgo.MessageEmbedThumbnail{URL: thumbUrl},
-		Fields: []*discordgo.MessageEmbedField{
-			{
-				Name:   "Server",
-				Value:  fmt.Sprintf("`%s`", stream.ServerAddress),
-				Inline: true,
-			},
-		},
+		Fields:      []*discordgo.MessageEmbedField{},
 		Footer: &discordgo.MessageEmbedFooter{
 			Text: fmt.Sprintf("%d viewers", stream.ViewerCount),
 		},
 	}
+
+	if stream.ServerAddress != "" {
+		embed.Fields = append(embed.Fields,
+			&discordgo.MessageEmbedField{
+				Name:   "Server",
+				Value:  fmt.Sprintf("`%s`", stream.ServerAddress),
+				Inline: true,
+			},
+		)
+	}
+
+	return embed
 }
