@@ -75,7 +75,7 @@ func TestFromMvdsvServer(t *testing.T) {
 
 	expect := &discordgo.MessageEmbed{
 		Title:       ":flag_se: quake.se:28501",
-		Description: "4on4 on dm2\n",
+		Description: "4on4 on dm2",
 		Color:       0x0c2aac,
 		Fields: []*discordgo.MessageEmbedField{
 			{
