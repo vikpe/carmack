@@ -6,12 +6,12 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/carmack/internal/pkg/carmack/embed"
-	"github.com/vikpe/carmack/internal/pkg/hub"
+	"github.com/vikpe/qw-hub-api/types"
 )
 
 func TestFromStream(t *testing.T) {
 	t.Run("base test", func(t *testing.T) {
-		stream := hub.Stream{
+		stream := types.TwitchStream{
 			Channel:       "QuakeWorld",
 			Url:           "https://twitch.tv/Quakeworld",
 			Title:         "1on1: dough vs grl [ztndm3]",
@@ -24,9 +24,6 @@ func TestFromStream(t *testing.T) {
 			URL:         "https://twitch.tv/Quakeworld",
 			Description: "1on1: dough vs grl [ztndm3]",
 			Color:       0xa970ff,
-			Thumbnail: &discordgo.MessageEmbedThumbnail{
-				URL: "https://static-cdn.jtvnw.net/previews-ttv/live_user_quakeworld-428x240.jpg",
-			},
 			Fields: []*discordgo.MessageEmbedField{
 				{
 					Name:   "Server",
@@ -43,7 +40,7 @@ func TestFromStream(t *testing.T) {
 	})
 
 	t.Run("no server address", func(t *testing.T) {
-		stream := hub.Stream{ServerAddress: ""}
+		stream := types.TwitchStream{ServerAddress: ""}
 		assert.Empty(t, embed.FromStream(stream).Fields)
 	})
 }

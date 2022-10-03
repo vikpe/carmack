@@ -3,7 +3,7 @@ package streams
 import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/vikpe/carmack/internal/pkg/carmack/embed"
-	"github.com/vikpe/carmack/internal/pkg/hub"
+	"github.com/vikpe/go-qwhub"
 )
 
 var Command = &discordgo.ApplicationCommand{
@@ -12,8 +12,6 @@ var Command = &discordgo.ApplicationCommand{
 }
 
 func Handler(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
-	streams, err := hub.NewClient().Streams()
-
 	response := &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
@@ -21,10 +19,7 @@ func Handler(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
 		},
 	}
 
-	if err != nil {
-		response.Data.Content = err.Error()
-		return response
-	}
+	streams := qwhub.NewClient().Streams()
 
 	if 0 == len(streams) {
 		response.Data.Content = "No streams found."

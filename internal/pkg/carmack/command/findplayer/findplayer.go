@@ -25,7 +25,7 @@ var Command = &discordgo.ApplicationCommand{
 func Handler(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
 	optionMap := util.ToOptionsMap(i.ApplicationCommandData().Options)
 	playerName := optionMap["name"].StringValue()
-	server, err := hub.NewClient().FindPlayer(playerName)
+	serverWithPlayer, err := hub.FindPlayer(playerName)
 
 	response := &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -40,6 +40,6 @@ func Handler(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
 	}
 
 	response.Data.Content = fmt.Sprintf("%s is at", playerName)
-	response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromMvdsvServer(server)}
+	response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromMvdsvServer(serverWithPlayer)}
 	return response
 }
