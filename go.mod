@@ -7,6 +7,7 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/stretchr/testify v1.8.0
 	github.com/vikpe/go-qwhub v0.1.0
+	github.com/vikpe/qw-hub-api v0.0.0-20221004144214-da57bb22affc
 	github.com/vikpe/serverstat v0.2.1
 )
 
@@ -23,7 +24,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/ssoroka/slice v0.0.0-20220402005549-78f0cea3df8b // indirect
 	github.com/valyala/fastjson v1.6.3 // indirect
-	github.com/vikpe/qw-hub-api v0.0.0-20221002155318-f7f6f2e452c0 // indirect
 	github.com/vikpe/udpclient v0.1.3 // indirect
 	github.com/vikpe/wildcard v0.1.0 // indirect
 	golang.org/x/crypto v0.0.0-20220926161630-eccd6366d1be // indirect
