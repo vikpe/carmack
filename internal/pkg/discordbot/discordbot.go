@@ -69,7 +69,7 @@ func (b *Bot) Start() {
 func (b *Bot) RegisterCommands() {
 	log.Println("RegisterCommands()")
 	for _, command := range b.commands {
-		_, err := b.session.ApplicationCommandCreate(b.session.State.User.ID, b.guildID, command)
+		_, err := b.session.ApplicationCommandCreate(b.session.State.User.ID, "", command)
 		if err != nil {
 			log.Panicf("Cannot create '%s' command: %s", command.Name, err)
 		}
@@ -120,7 +120,7 @@ func (b *Bot) RegisterCommands() {
 func (b *Bot) UnregisterCommands() {
 	log.Println("UnregisterCommands()")
 
-	registeredCommands, err := b.session.ApplicationCommands(b.session.State.User.ID, b.guildID)
+	registeredCommands, err := b.session.ApplicationCommands(b.session.State.User.ID, "")
 	if err != nil {
 		log.Fatalf("Could not fetch registered commands: %v", err)
 	}
@@ -128,7 +128,7 @@ func (b *Bot) UnregisterCommands() {
 	for _, v := range registeredCommands {
 		log.Println(fmt.Sprintf(`removing command "%s"`, v.Name))
 
-		err := b.session.ApplicationCommandDelete(b.session.State.User.ID, b.guildID, v.ID)
+		err := b.session.ApplicationCommandDelete(b.session.State.User.ID, "", v.ID)
 		if err != nil {
 			log.Panicf("Cannot delete '%v' command: %v", v.Name, err)
 		}
