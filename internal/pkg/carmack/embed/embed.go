@@ -26,14 +26,18 @@ func FromMvdsvServer(server mvdsv.Mvdsv) *discordgo.MessageEmbed {
 	title := fmt.Sprintf(":flag_%s: %s", strings.ToLower(server.Geo.CC), hostname)
 	statusText := strings.ToLower(fmt.Sprintf("%s - %s", server.Status.Name, server.Status.Description))
 
+	clientFieldsInline := server.PlayerSlots.Used == 0 && server.SpectatorSlots.Used == 0
+
 	fields := []*discordgo.MessageEmbedField{
 		{
-			Name:  fmt.Sprintf("Players (%d/%d)", server.PlayerSlots.Used, server.PlayerSlots.Total),
-			Value: sliceToNaturalList(analyze.GetPlayerPlainNames(server)),
+			Name:   fmt.Sprintf("Players (%d/%d)", server.PlayerSlots.Used, server.PlayerSlots.Total),
+			Value:  sliceToNaturalList(analyze.GetPlayerPlainNames(server)),
+			Inline: clientFieldsInline,
 		},
 		{
-			Name:  fmt.Sprintf("Spectators (%d/%d)", server.SpectatorSlots.Used, server.SpectatorSlots.Total),
-			Value: sliceToNaturalList(server.SpectatorNames),
+			Name:   fmt.Sprintf("Spectators (%d/%d)", server.SpectatorSlots.Used, server.SpectatorSlots.Total),
+			Value:  sliceToNaturalList(server.SpectatorNames),
+			Inline: clientFieldsInline,
 		},
 	}
 
