@@ -17,7 +17,7 @@ func main() {
 
 	carmackBot, err := carmack.New(
 		os.Getenv("BOT_TOKEN"),
-		os.Getenv("GUILD_IDS"),
+		os.Getenv("GUILD_ID"),
 	)
 
 	if err != nil {
