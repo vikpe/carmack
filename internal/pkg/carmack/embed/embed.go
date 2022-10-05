@@ -25,20 +25,29 @@ func FromMvdsvServer(server mvdsv.Mvdsv) *discordgo.MessageEmbed {
 	hostname := server.Settings.Get("hostname_parsed", server.Address)
 	title := fmt.Sprintf(":flag_%s: %s", strings.ToLower(server.Geo.CC), hostname)
 
+	fields := []*discordgo.MessageEmbedField{
+		{
+			Name:  fmt.Sprintf("Players (%d/%d)", server.PlayerSlots.Used, server.PlayerSlots.Total),
+			Value: sliceToNaturalList(analyze.GetPlayerPlainNames(server)),
+		},
+		{
+			Name:  fmt.Sprintf("Spectators (%d/%d)", server.SpectatorSlots.Used, server.SpectatorSlots.Total),
+			Value: sliceToNaturalList(server.SpectatorNames),
+		},
+	}
+
+	if len(server.QtvStream.Address) > 0 {
+		fields = append(fields, &discordgo.MessageEmbedField{
+			Name:  "QTV",
+			Value: fmt.Sprintf("`%s`", server.QtvStream.Url),
+		})
+	}
+
 	embed := &discordgo.MessageEmbed{
 		Title:       title,
 		Description: fmt.Sprintf("%s on %s", server.Mode, server.Settings.Get("map", "")),
 		Color:       colorBlue,
-		Fields: []*discordgo.MessageEmbedField{
-			{
-				Name:  fmt.Sprintf("Players (%d/%d)", server.PlayerSlots.Used, server.PlayerSlots.Total),
-				Value: sliceToNaturalList(analyze.GetPlayerPlainNames(server)),
-			},
-			{
-				Name:  fmt.Sprintf("Spectators (%d/%d)", server.SpectatorSlots.Used, server.SpectatorSlots.Total),
-				Value: sliceToNaturalList(server.SpectatorNames),
-			},
-		},
+		Fields:      fields,
 		Footer: &discordgo.MessageEmbedFooter{
 			Text: fmt.Sprintf(
 				"%s - %s",

@@ -86,6 +86,10 @@ func TestFromMvdsvServer(t *testing.T) {
 				Name:  "Spectators (1/4)",
 				Value: "[ServeMe]",
 			},
+			{
+				Name:  "QTV",
+				Value: "`1@quake.se:28000`",
+			},
 		},
 		Footer: &discordgo.MessageEmbedFooter{
 			Text: "Started - 3 min left",
