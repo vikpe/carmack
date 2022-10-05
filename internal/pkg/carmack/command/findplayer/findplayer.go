@@ -39,7 +39,7 @@ func Handler(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
 		return response
 	}
 
-	response.Data.Content = fmt.Sprintf("%s is at", playerName)
+	response.Data.Content = fmt.Sprintf(`found "%s" at`, playerName)
 	response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromMvdsvServer(serverWithPlayer)}
 	return response
 }
