@@ -20,10 +20,10 @@ func FindPlayer(pattern string) (mvdsv.Mvdsv, error) {
 		pattern = fmt.Sprintf("*%s*", pattern)
 	}
 
-	servers := qwhub.NewClient().MvdsvServers(map[string]string{"has_player": pattern})
+	servers := qwhub.NewClient().MvdsvServers(map[string]string{"has_client": pattern})
 
 	if 0 == len(servers) {
-		return mvdsv.Mvdsv{}, errors.New(fmt.Sprintf(`player "%s" not found.`, pattern))
+		return mvdsv.Mvdsv{}, errors.New(fmt.Sprintf(`client "%s" not found.`, pattern))
 	}
 
 	return servers[0], nil
