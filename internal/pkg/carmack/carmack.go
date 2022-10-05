@@ -19,7 +19,7 @@ func New(token string, guildID string) (*Carmack, error) {
 	statClient := serverstat.NewClient()
 	bot.AddCommand(serverinfo.Command, serverinfo.GetHandler(statClient))
 	bot.AddCommand(findplayer.Command, findplayer.Handler)
-	bot.AddCommand(streams.Command, streams.Handler)
+	bot.AddCommand(streams.Command, streams.GetHandler(statClient))
 	bot.AddAutocompleteHandler("address", autocomplete.ServerAddress)
 
 	return &Carmack{

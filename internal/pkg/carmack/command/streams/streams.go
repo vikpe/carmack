@@ -3,7 +3,10 @@ package streams
 import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/vikpe/carmack/internal/pkg/carmack/embed"
+	"github.com/vikpe/carmack/internal/pkg/discordbot"
 	"github.com/vikpe/go-qwhub"
+	"github.com/vikpe/serverstat"
+	"github.com/vikpe/serverstat/qserver/convert"
 )
 
 var Command = &discordgo.ApplicationCommand{
@@ -11,27 +14,40 @@ var Command = &discordgo.ApplicationCommand{
 	Description: "Streams",
 }
 
-func Handler(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
-	response := &discordgo.InteractionResponse{
-		Type: discordgo.InteractionResponseChannelMessageWithSource,
-		Data: &discordgo.InteractionResponseData{
-			Flags: discordgo.MessageFlagsEphemeral,
-		},
-	}
+func GetHandler(sstat *serverstat.Client) discordbot.CommandHandler {
+	return func(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
+		response := &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Flags: discordgo.MessageFlagsEphemeral,
+			},
+		}
 
-	streams := qwhub.NewClient().Streams()
+		streams := qwhub.NewClient().Streams()
 
-	if 0 == len(streams) {
-		response.Data.Content = "No streams found."
+		if 0 == len(streams) {
+			response.Data.Content = "No streams found."
+			return response
+		}
+
+		embeds := make([]*discordgo.MessageEmbed, 0)
+
+		for _, stream := range streams {
+			streamEmbed := embed.FromStream(stream)
+			embeds = append(embeds, streamEmbed)
+
+			if len(stream.ServerAddress) > 0 {
+				genericServer, err := sstat.GetInfo(stream.ServerAddress)
+
+				if err == nil && genericServer.Version.IsMvdsv() {
+					mvdsvServer := convert.ToMvdsv(genericServer)
+					serverEmbed := embed.FromMvdsvServer(mvdsvServer)
+					embeds = append(embeds, serverEmbed)
+				}
+			}
+		}
+
+		response.Data.Embeds = embeds
 		return response
 	}
-
-	embeds := make([]*discordgo.MessageEmbed, 0)
-
-	for _, stream := range streams {
-		embeds = append(embeds, embed.FromStream(stream))
-	}
-
-	response.Data.Embeds = embeds
-	return response
 }
