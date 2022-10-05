@@ -73,20 +73,9 @@ func FromStream(stream types.TwitchStream) *discordgo.MessageEmbed {
 		URL:         stream.Url,
 		Description: stream.Title,
 		Color:       colorPurple,
-		Fields:      []*discordgo.MessageEmbedField{},
 		Footer: &discordgo.MessageEmbedFooter{
 			Text: fmt.Sprintf("%d viewers", stream.ViewerCount),
 		},
-	}
-
-	if stream.ServerAddress != "" {
-		embed.Fields = append(embed.Fields,
-			&discordgo.MessageEmbedField{
-				Name:   "Server",
-				Value:  fmt.Sprintf("`%s`", stream.ServerAddress),
-				Inline: true,
-			},
-		)
 	}
 
 	return embed
