@@ -54,7 +54,7 @@ func TestFromMvdsvServer(t *testing.T) {
 			Total: 4,
 			Free:  3,
 		},
-		Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "3 min left", "timelimit": "10", "maxclients": "8", "maxspectators": "4", "teamplay": "2"},
+		Settings: qsettings.Settings{"map": "dm2", "*gamedir": "qw", "status": "3 min left", "timelimit": "10", "maxclients": "8", "maxspectators": "4", "teamplay": "2", "*version": "MVDSV 0.34", "ktxver": "1.40", "*admin": "spam@foppa.dk"},
 		QtvStream: qtvstream.QtvStream{
 			Title:          "QUAKE.SE KTX Qtv (1)",
 			Url:            "1@quake.se:28000",
@@ -75,7 +75,7 @@ func TestFromMvdsvServer(t *testing.T) {
 
 	expect := &discordgo.MessageEmbed{
 		Title:       ":flag_se: quake.se:28501",
-		Description: "4on4 on dm2",
+		Description: "4on4 on dm2 (started - 3 min left)",
 		Color:       0x0c2aac,
 		Fields: []*discordgo.MessageEmbedField{
 			{
@@ -92,7 +92,7 @@ func TestFromMvdsvServer(t *testing.T) {
 			},
 		},
 		Footer: &discordgo.MessageEmbedFooter{
-			Text: "Started - 3 min left",
+			Text: "Admin: spam@foppa.dk [MVDSV 0.34, KTX 1.40]",
 		},
 	}
 
