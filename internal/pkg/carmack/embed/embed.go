@@ -8,6 +8,7 @@ import (
 	"github.com/vikpe/qw-hub-api/types"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/analyze"
+	"github.com/vikpe/serverstat/qserver/qtv"
 )
 
 const colorPurple = 0xa970ff
@@ -61,6 +62,27 @@ func FromMvdsvServer(server mvdsv.Mvdsv) *discordgo.MessageEmbed {
 		Fields:      fields,
 		Footer: &discordgo.MessageEmbedFooter{
 			Text: fmt.Sprintf("Admin: %s [%s]", server.Settings.Get("*admin", "unknown"), versionString),
+		},
+	}
+
+	return embed
+}
+
+func FromQtvServer(server qtv.Qtv) *discordgo.MessageEmbed {
+	hostname := server.Settings.Get("hostname_parsed", server.Address)
+	title := fmt.Sprintf(":flag_%s: %s", strings.ToLower(server.Geo.CC), hostname)
+
+	embed := &discordgo.MessageEmbed{
+		Title: title,
+		Color: colorBlue,
+		Fields: []*discordgo.MessageEmbedField{
+			{
+				Name:  fmt.Sprintf("Spectators (%d/%d)", len(server.SpectatorNames), server.Settings.GetInt("maxclients", 0)),
+				Value: sliceToNaturalList(server.SpectatorNames),
+			},
+		},
+		Footer: &discordgo.MessageEmbedFooter{
+			Text: server.Settings.Get("*version", "(unknown version)"),
 		},
 	}
 
