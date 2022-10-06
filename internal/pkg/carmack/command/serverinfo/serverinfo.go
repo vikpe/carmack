@@ -45,6 +45,9 @@ func GetHandler(sstat *serverstat.Client) discordbot.CommandHandler {
 		} else if genericServer.Version.IsQtv() {
 			server := convert.ToQtv(genericServer)
 			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromQtvServer(server)}
+		} else if genericServer.Version.IsQwfwd() {
+			server := convert.ToQwfwd(genericServer)
+			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromQwfwdServer(server)}
 		} else {
 			response.Data.Content = "(server type not implemented)"
 		}

@@ -17,6 +17,7 @@ import (
 	"github.com/vikpe/serverstat/qserver/qsettings"
 	"github.com/vikpe/serverstat/qserver/qtime"
 	"github.com/vikpe/serverstat/qserver/qtv"
+	"github.com/vikpe/serverstat/qserver/qwfwd"
 	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
@@ -136,6 +137,42 @@ func TestFromQtvServer(t *testing.T) {
 	}
 
 	assert.Equal(t, expect, embed.FromQtvServer(server))
+}
+
+func TestFromQwfwdServer(t *testing.T) {
+	server := qwfwd.Qwfwd{
+		Address:     "46.227.68.148:30000",
+		ClientNames: []string{"bps", "XantoM"},
+		Settings: map[string]string{
+			"*version":        "qwfwd 1.2",
+			"hostname":        "QUAKE.SE KTX QWfwd",
+			"hostname_parsed": "quake.se:30000",
+			"maxclients":      "128",
+		},
+		Geo: geo.Location{
+			CC:          "SE",
+			Country:     "Sweden",
+			Region:      "Europe",
+			City:        "Hagersten",
+			Coordinates: [2]float32{59.2885, 17.9612},
+		},
+	}
+
+	expect := &discordgo.MessageEmbed{
+		Title: ":flag_se: quake.se:30000",
+		Color: 0x0c2aac,
+		Fields: []*discordgo.MessageEmbedField{
+			{
+				Name:  "Clients (2/128)",
+				Value: "bps, XantoM",
+			},
+		},
+		Footer: &discordgo.MessageEmbedFooter{
+			Text: "qwfwd 1.2",
+		},
+	}
+
+	assert.Equal(t, expect, embed.FromQwfwdServer(server))
 }
 
 func TestFromStream(t *testing.T) {
