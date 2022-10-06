@@ -1,6 +1,8 @@
 package serverinfo
 
 import (
+	"fmt"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/vikpe/carmack/internal/pkg/carmack/embed"
 	"github.com/vikpe/carmack/internal/pkg/discordbot"
@@ -49,7 +51,7 @@ func GetHandler(sstat *serverstat.Client) discordbot.CommandHandler {
 			server := convert.ToQwfwd(genericServer)
 			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromQwfwdServer(server)}
 		} else {
-			response.Data.Content = "(server type not implemented)"
+			response.Data.Content = fmt.Sprintf("(server type not implemented: %s)", genericServer.Version.GetType())
 		}
 
 		return response
