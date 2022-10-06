@@ -26,7 +26,7 @@ var Command = &discordgo.ApplicationCommand{
 func GetHandler(sstat *serverstat.Client) discordbot.CommandHandler {
 	return func(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
 		optionMap := util.ToOptionsMap(i.ApplicationCommandData().Options)
-		serverInfo, err := sstat.GetInfo(optionMap["address"].StringValue())
+		genericServer, err := sstat.GetInfo(optionMap["address"].StringValue())
 
 		response := &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -39,9 +39,11 @@ func GetHandler(sstat *serverstat.Client) discordbot.CommandHandler {
 			response.Data.Content = err.Error()
 		}
 
-		if serverInfo.Version.IsMvdsv() {
-			server := convert.ToMvdsv(serverInfo)
+		if genericServer.Version.IsMvdsv() {
+			server := convert.ToMvdsv(genericServer)
 			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromMvdsvServer(server)}
+		} else {
+			response.Data.Content = "(server type not implemented)"
 		}
 
 		return response
