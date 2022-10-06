@@ -79,12 +79,14 @@ func TestFromMvdsvServer(t *testing.T) {
 		Color:       0x0c2aac,
 		Fields: []*discordgo.MessageEmbedField{
 			{
-				Name:  "Players (1/8)",
-				Value: "XantoM",
+				Name:   "Players (1/8)",
+				Value:  "XantoM",
+				Inline: true,
 			},
 			{
-				Name:  "Spectators (1/4)",
-				Value: "[ServeMe]",
+				Name:   "Spectators (1/4)",
+				Value:  "[ServeMe]",
+				Inline: true,
 			},
 			{
 				Name:  "QTV",
