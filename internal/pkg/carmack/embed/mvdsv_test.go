@@ -6,7 +6,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/carmack/internal/pkg/carmack/embed"
-	"github.com/vikpe/qw-hub-api/types"
 	"github.com/vikpe/serverstat/qserver/geo"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/qmode"
@@ -16,8 +15,6 @@ import (
 	"github.com/vikpe/serverstat/qserver/qclient/slots"
 	"github.com/vikpe/serverstat/qserver/qsettings"
 	"github.com/vikpe/serverstat/qserver/qtime"
-	"github.com/vikpe/serverstat/qserver/qtv"
-	"github.com/vikpe/serverstat/qserver/qwfwd"
 	"github.com/vikpe/serverstat/qtext/qstring"
 )
 
@@ -101,98 +98,4 @@ func TestFromMvdsvServer(t *testing.T) {
 	}
 
 	assert.Equal(t, expect, embed.FromMvdsvServer(server))
-}
-
-func TestFromQtvServer(t *testing.T) {
-	server := qtv.Qtv{
-		Address:        "46.227.68.148:28000",
-		SpectatorNames: []string{"bps", "XantoM"},
-		Settings: map[string]string{
-			"*version":        "QTV 1.12-rc1",
-			"hostname":        "QUAKE.SE KTX Qtv",
-			"hostname_parsed": "quake.se:28000",
-			"maxclients":      "100",
-		},
-		Geo: geo.Location{
-			CC:          "SE",
-			Country:     "Sweden",
-			Region:      "Europe",
-			City:        "Hagersten",
-			Coordinates: [2]float32{59.2885, 17.9612},
-		},
-	}
-
-	expect := &discordgo.MessageEmbed{
-		Title: ":flag_se: quake.se:28000",
-		Color: 0x0c2aac,
-		Fields: []*discordgo.MessageEmbedField{
-			{
-				Name:  "Spectators (2/100)",
-				Value: "bps, XantoM",
-			},
-		},
-		Footer: &discordgo.MessageEmbedFooter{
-			Text: "QTV 1.12-rc1",
-		},
-	}
-
-	assert.Equal(t, expect, embed.FromQtvServer(server))
-}
-
-func TestFromQwfwdServer(t *testing.T) {
-	server := qwfwd.Qwfwd{
-		Address:     "46.227.68.148:30000",
-		ClientNames: []string{"bps", "XantoM"},
-		Settings: map[string]string{
-			"*version":        "qwfwd 1.2",
-			"hostname":        "QUAKE.SE KTX QWfwd",
-			"hostname_parsed": "quake.se:30000",
-			"maxclients":      "128",
-		},
-		Geo: geo.Location{
-			CC:          "SE",
-			Country:     "Sweden",
-			Region:      "Europe",
-			City:        "Hagersten",
-			Coordinates: [2]float32{59.2885, 17.9612},
-		},
-	}
-
-	expect := &discordgo.MessageEmbed{
-		Title: ":flag_se: quake.se:30000",
-		Color: 0x0c2aac,
-		Fields: []*discordgo.MessageEmbedField{
-			{
-				Name:  "Clients (2/128)",
-				Value: "bps, XantoM",
-			},
-		},
-		Footer: &discordgo.MessageEmbedFooter{
-			Text: "qwfwd 1.2",
-		},
-	}
-
-	assert.Equal(t, expect, embed.FromQwfwdServer(server))
-}
-
-func TestFromStream(t *testing.T) {
-	stream := types.TwitchStream{
-		Channel:       "QuakeWorld",
-		Url:           "https://twitch.tv/Quakeworld",
-		Title:         "1on1: dough vs grl [ztndm3]",
-		ViewerCount:   5,
-		ServerAddress: "qw.foppa.dk:27502",
-	}
-
-	expect := &discordgo.MessageEmbed{
-		Title:       "QuakeWorld",
-		URL:         "https://twitch.tv/Quakeworld",
-		Description: "1on1: dough vs grl [ztndm3]",
-		Color:       0xa970ff,
-		Footer: &discordgo.MessageEmbedFooter{
-			Text: "5 viewers",
-		},
-	}
-
-	assert.Equal(t, expect, embed.FromStream(stream))
 }
