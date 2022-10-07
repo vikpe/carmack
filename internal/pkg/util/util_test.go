@@ -66,3 +66,8 @@ func TestToOptionChoices(t *testing.T) {
 	}
 	assert.Equal(t, expect, util.ToOptionChoices(options))
 }
+
+func TestSliceToNaturalList(t *testing.T) {
+	assert.Equal(t, "-", util.SliceToNaturalList([]string{}))
+	assert.Equal(t, "a, b, c", util.SliceToNaturalList([]string{"a", "b", "c"}))
+}

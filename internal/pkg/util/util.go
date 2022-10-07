@@ -53,3 +53,11 @@ func ToOptionsChoice(option []string) *discordgo.ApplicationCommandOptionChoice 
 
 	return choice
 }
+
+func SliceToNaturalList(values []string) string {
+	if 0 == len(values) {
+		return "-"
+	}
+
+	return strings.Join(values, ", ")
+}

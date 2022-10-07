@@ -6,20 +6,13 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/vikpe/carmack/internal/pkg/carmack/embed/color"
+	"github.com/vikpe/carmack/internal/pkg/util"
 	"github.com/vikpe/qw-hub-api/types"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/analyze"
 	"github.com/vikpe/serverstat/qserver/qtv"
 	"github.com/vikpe/serverstat/qserver/qwfwd"
 )
-
-func sliceToNaturalList(values []string) string {
-	if 0 == len(values) {
-		return "-"
-	}
-
-	return strings.Join(values, ", ")
-}
 
 func FromMvdsvServer(server mvdsv.Mvdsv) *discordgo.MessageEmbed {
 	hostname := server.Settings.Get("hostname_parsed", server.Address)
@@ -31,12 +24,12 @@ func FromMvdsvServer(server mvdsv.Mvdsv) *discordgo.MessageEmbed {
 	fields := []*discordgo.MessageEmbedField{
 		{
 			Name:   fmt.Sprintf("Players (%d/%d)", server.PlayerSlots.Used, server.PlayerSlots.Total),
-			Value:  sliceToNaturalList(analyze.GetPlayerPlainNames(server)),
+			Value:  util.SliceToNaturalList(analyze.GetPlayerPlainNames(server)),
 			Inline: clientFieldsInline,
 		},
 		{
 			Name:   fmt.Sprintf("Spectators (%d/%d)", server.SpectatorSlots.Used, server.SpectatorSlots.Total),
-			Value:  sliceToNaturalList(server.SpectatorNames),
+			Value:  util.SliceToNaturalList(server.SpectatorNames),
 			Inline: clientFieldsInline,
 		},
 	}
@@ -77,7 +70,7 @@ func FromQtvServer(server qtv.Qtv) *discordgo.MessageEmbed {
 		Fields: []*discordgo.MessageEmbedField{
 			{
 				Name:  fmt.Sprintf("Spectators (%d/%d)", len(server.SpectatorNames), server.Settings.GetInt("maxclients", 0)),
-				Value: sliceToNaturalList(server.SpectatorNames),
+				Value: util.SliceToNaturalList(server.SpectatorNames),
 			},
 		},
 		Footer: &discordgo.MessageEmbedFooter{
@@ -98,7 +91,7 @@ func FromQwfwdServer(server qwfwd.Qwfwd) *discordgo.MessageEmbed {
 		Fields: []*discordgo.MessageEmbedField{
 			{
 				Name:  fmt.Sprintf("Clients (%d/%d)", len(server.ClientNames), server.Settings.GetInt("maxclients", 0)),
-				Value: sliceToNaturalList(server.ClientNames),
+				Value: util.SliceToNaturalList(server.ClientNames),
 			},
 		},
 		Footer: &discordgo.MessageEmbedFooter{
