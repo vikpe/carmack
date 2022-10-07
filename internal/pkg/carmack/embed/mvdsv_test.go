@@ -40,8 +40,7 @@ func TestFromMvdsvServer(t *testing.T) {
 			Frags:  2,
 			Ping:   38,
 			Time:   4,
-		},
-		},
+		}},
 		PlayerSlots: slots.Slots{
 			Used:  1,
 			Total: 8,
