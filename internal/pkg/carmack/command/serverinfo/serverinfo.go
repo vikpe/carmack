@@ -1,8 +1,6 @@
 package serverinfo
 
 import (
-	"fmt"
-
 	"github.com/bwmarrin/discordgo"
 	"github.com/vikpe/carmack/internal/pkg/carmack/embed"
 	"github.com/vikpe/carmack/internal/pkg/discordbot"
@@ -42,16 +40,16 @@ func GetHandler(sstat *serverstat.Client) discordbot.CommandHandler {
 		}
 
 		if genericServer.Version.IsMvdsv() {
-			server := convert.ToMvdsv(genericServer)
-			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromMvdsvServer(server)}
+			mvdsvServer := convert.ToMvdsv(genericServer)
+			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromMvdsvServer(mvdsvServer)}
 		} else if genericServer.Version.IsQtv() {
-			server := convert.ToQtv(genericServer)
-			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromQtvServer(server)}
+			qtvServer := convert.ToQtv(genericServer)
+			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromQtvServer(qtvServer)}
 		} else if genericServer.Version.IsQwfwd() {
-			server := convert.ToQwfwd(genericServer)
-			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromQwfwdServer(server)}
+			qwfwdServer := convert.ToQwfwd(genericServer)
+			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromQwfwdServer(qwfwdServer)}
 		} else {
-			response.Data.Content = fmt.Sprintf("(server type not implemented: %s)", genericServer.Version.GetType())
+			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromGenericServer(genericServer)}
 		}
 
 		return response
