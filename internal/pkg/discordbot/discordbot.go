@@ -78,6 +78,8 @@ func (b *Bot) RegisterCommands() {
 	b.session.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		switch i.Type {
 		case discordgo.InteractionApplicationCommand:
+			log.Println(fmt.Sprintf("## command: %s", i.ApplicationCommandData().Name))
+
 			if handler, ok := b.commandHandlers[i.ApplicationCommandData().Name]; ok {
 				interactionResponse := handler(i)
 				err := s.InteractionRespond(i.Interaction, interactionResponse)
