@@ -25,26 +25,7 @@ const Grey = 0xa9a9a9
 
 func all() []int {
 	return []int{
-		Red,
-		Green,
-		Yellow,
-		Blue,
-		Orange,
-		Purple,
-		Cyan,
-		Magenta,
-		Lime,
-		Pink,
-		Teal,
-		Lavender,
-		Brown,
-		Beige,
-		Maroon,
-		Mint,
-		Olive,
-		Apricot,
-		Navy,
-		Grey,
+		Red, Green, Yellow, Blue, Orange, Purple, Cyan, Magenta, Lime, Pink, Teal, Lavender, Brown, Beige, Maroon, Mint, Olive, Apricot, Navy, Grey,
 	}
 }
 
