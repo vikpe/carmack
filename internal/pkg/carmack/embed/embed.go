@@ -5,15 +5,13 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/vikpe/carmack/internal/pkg/carmack/embed/color"
 	"github.com/vikpe/qw-hub-api/types"
 	"github.com/vikpe/serverstat/qserver/mvdsv"
 	"github.com/vikpe/serverstat/qserver/mvdsv/analyze"
 	"github.com/vikpe/serverstat/qserver/qtv"
 	"github.com/vikpe/serverstat/qserver/qwfwd"
 )
-
-const colorPurple = 0xa970ff
-const colorBlue = 0x0c2aac
 
 func sliceToNaturalList(values []string) string {
 	if 0 == len(values) {
@@ -59,7 +57,7 @@ func FromMvdsvServer(server mvdsv.Mvdsv) *discordgo.MessageEmbed {
 	embed := &discordgo.MessageEmbed{
 		Title:       title,
 		Description: fmt.Sprintf("%s on %s (%s)", server.Mode, server.Settings.Get("map", ""), statusText),
-		Color:       colorBlue,
+		Color:       color.Blue,
 		Fields:      fields,
 		Footer: &discordgo.MessageEmbedFooter{
 			Text: fmt.Sprintf("Admin: %s [%s]", server.Settings.Get("*admin", "unknown"), versionString),
@@ -75,7 +73,7 @@ func FromQtvServer(server qtv.Qtv) *discordgo.MessageEmbed {
 
 	embed := &discordgo.MessageEmbed{
 		Title: title,
-		Color: colorBlue,
+		Color: color.Blue,
 		Fields: []*discordgo.MessageEmbedField{
 			{
 				Name:  fmt.Sprintf("Spectators (%d/%d)", len(server.SpectatorNames), server.Settings.GetInt("maxclients", 0)),
@@ -96,7 +94,7 @@ func FromQwfwdServer(server qwfwd.Qwfwd) *discordgo.MessageEmbed {
 
 	embed := &discordgo.MessageEmbed{
 		Title: title,
-		Color: colorBlue,
+		Color: color.Blue,
 		Fields: []*discordgo.MessageEmbedField{
 			{
 				Name:  fmt.Sprintf("Clients (%d/%d)", len(server.ClientNames), server.Settings.GetInt("maxclients", 0)),
@@ -116,7 +114,7 @@ func FromStream(stream types.TwitchStream) *discordgo.MessageEmbed {
 		Title:       stream.Channel,
 		URL:         stream.Url,
 		Description: stream.Title,
-		Color:       colorPurple,
+		Color:       color.Purple,
 		Footer: &discordgo.MessageEmbedFooter{
 			Text: fmt.Sprintf("%d viewers", stream.ViewerCount),
 		},
