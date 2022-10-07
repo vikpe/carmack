@@ -6,7 +6,6 @@ import (
 	"github.com/vikpe/carmack/internal/pkg/discordbot"
 	"github.com/vikpe/carmack/internal/pkg/util"
 	"github.com/vikpe/serverstat"
-	"github.com/vikpe/serverstat/qserver/convert"
 )
 
 var Command = &discordgo.ApplicationCommand{
@@ -26,7 +25,7 @@ var Command = &discordgo.ApplicationCommand{
 func GetHandler(sstat *serverstat.Client) discordbot.CommandHandler {
 	return func(i *discordgo.InteractionCreate) *discordgo.InteractionResponse {
 		optionMap := util.ToOptionsMap(i.ApplicationCommandData().Options)
-		genericServer, err := sstat.GetInfo(optionMap["address"].StringValue())
+		server, err := sstat.GetInfo(optionMap["address"].StringValue())
 
 		response := &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -39,18 +38,7 @@ func GetHandler(sstat *serverstat.Client) discordbot.CommandHandler {
 			response.Data.Content = err.Error()
 		}
 
-		if genericServer.Version.IsMvdsv() {
-			mvdsvServer := convert.ToMvdsv(genericServer)
-			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromMvdsvServer(mvdsvServer)}
-		} else if genericServer.Version.IsQtv() {
-			qtvServer := convert.ToQtv(genericServer)
-			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromQtvServer(qtvServer)}
-		} else if genericServer.Version.IsQwfwd() {
-			qwfwdServer := convert.ToQwfwd(genericServer)
-			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromQwfwdServer(qwfwdServer)}
-		} else {
-			response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromGenericServer(genericServer)}
-		}
+		response.Data.Embeds = []*discordgo.MessageEmbed{embed.FromServer(server)}
 
 		return response
 	}
