@@ -3,6 +3,7 @@ package streams
 import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/vikpe/carmack/internal/pkg/carmack/embed"
+	"github.com/vikpe/carmack/internal/pkg/carmack/embed/color"
 	"github.com/vikpe/carmack/internal/pkg/discordbot"
 	"github.com/vikpe/go-qwhub"
 	"github.com/vikpe/serverstat"
@@ -24,16 +25,20 @@ func GetHandler(sstat *serverstat.Client) discordbot.CommandHandler {
 		}
 
 		streams := qwhub.NewClient().Streams()
+		streamCount := len(streams)
 
-		if 0 == len(streams) {
+		if 0 == streamCount {
 			response.Data.Content = "No streams found."
 			return response
 		}
 
 		embeds := make([]*discordgo.MessageEmbed, 0)
 
-		for _, stream := range streams {
+		for index, stream := range streams {
+			embedColor := streamEmbedColor(index, streamCount)
+
 			streamEmbed := embed.FromStream(stream)
+			streamEmbed.Color = embedColor
 			embeds = append(embeds, streamEmbed)
 
 			if len(stream.ServerAddress) > 0 {
@@ -42,6 +47,7 @@ func GetHandler(sstat *serverstat.Client) discordbot.CommandHandler {
 				if err == nil && genericServer.Version.IsMvdsv() {
 					mvdsvServer := convert.ToMvdsv(genericServer)
 					serverEmbed := embed.FromMvdsvServer(mvdsvServer)
+					serverEmbed.Color = embedColor
 					embeds = append(embeds, serverEmbed)
 				}
 			}
@@ -50,4 +56,12 @@ func GetHandler(sstat *serverstat.Client) discordbot.CommandHandler {
 		response.Data.Embeds = embeds
 		return response
 	}
+}
+
+func streamEmbedColor(index int, total int) int {
+	if 1 == total {
+		return color.Purple
+	}
+
+	return color.FromIndex(index)
 }
