@@ -8,7 +8,7 @@ require (
 	github.com/stretchr/testify v1.8.0
 	github.com/vikpe/go-qwhub v0.1.0
 	github.com/vikpe/qw-hub-api v0.0.0-20221004153120-5a4901fb9c86
-	github.com/vikpe/serverstat v0.2.1
+	github.com/vikpe/serverstat v0.2.5
 )
 
 require (
@@ -26,10 +26,10 @@ require (
 	github.com/valyala/fastjson v1.6.3 // indirect
 	github.com/vikpe/udpclient v0.1.3 // indirect
 	github.com/vikpe/wildcard v0.1.0 // indirect
-	golang.org/x/crypto v0.0.0-20221005025214-4161e89ecf1b // indirect
-	golang.org/x/exp v0.0.0-20221006183845-316c7553db56 // indirect
-	golang.org/x/net v0.0.0-20221004154528-8021a29435af // indirect
-	golang.org/x/sys v0.0.0-20221006211917-84dc82d7e875 // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/crypto v0.1.0 // indirect
+	golang.org/x/exp v0.0.0-20221028150844-83b7d23a625f // indirect
+	golang.org/x/net v0.1.0 // indirect
+	golang.org/x/sys v0.1.0 // indirect
+	golang.org/x/text v0.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
