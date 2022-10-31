@@ -5,10 +5,10 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/vikpe/carmack/internal/pkg/carmack/embed/color"
-	"github.com/vikpe/qw-hub-api/types"
+	"github.com/vikpe/qw-hub-api/pkg/twitch"
 )
 
-func FromStream(stream types.TwitchStream) *discordgo.MessageEmbed {
+func FromStream(stream twitch.Stream) *discordgo.MessageEmbed {
 	embed := &discordgo.MessageEmbed{
 		Title:       stream.Channel,
 		URL:         stream.Url,
