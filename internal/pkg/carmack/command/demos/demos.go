@@ -33,12 +33,12 @@ var Command = &discordgo.ApplicationCommand{
 		},
 		{
 			Type:        discordgo.ApplicationCommandOptionString,
-			Name:        "qtv_server",
-			Description: "QTV server",
+			Name:        "qtv_address",
+			Description: "QTV address",
 			Choices: []*discordgo.ApplicationCommandOptionChoice{
 				{Name: "dal.spawnfrag.com", Value: "dal.spawnfrag.com:28000"},
 				{Name: "de.aye.wtf", Value: "de.aye.wtf:28000"},
-				{Name: "la.spawnfrag.com", Value: "la.spawnfrag.com:28000"},
+				{Name: "la.qwsrv.com", Value: "la.qwsrv.com:28000"},
 				{Name: "london.badplace.eu", Value: "london.badplace.eu:28000"},
 				{Name: "nl.aye.wtf", Value: "nl.aye.wtf:28000"},
 				{Name: "ny.qwsrv.com", Value: "ny.qwsrv.com:28000"},
