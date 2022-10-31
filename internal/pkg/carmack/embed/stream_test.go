@@ -6,11 +6,11 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/stretchr/testify/assert"
 	"github.com/vikpe/carmack/internal/pkg/carmack/embed"
-	"github.com/vikpe/qw-hub-api/types"
+	"github.com/vikpe/qw-hub-api/pkg/twitch"
 )
 
 func TestFromStream(t *testing.T) {
-	stream := types.TwitchStream{
+	stream := twitch.Stream{
 		Channel:       "QuakeWorld",
 		Url:           "https://twitch.tv/Quakeworld",
 		Title:         "1on1: dough vs grl [ztndm3]",
