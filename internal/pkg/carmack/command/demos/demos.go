@@ -98,7 +98,7 @@ func ContentFromDemos(demos []qtvscraper.Demo) string {
 		demoFilename := qdemo.Filename(demo.Filename)
 		participants := formatParticipants(demoFilename.Participants())
 		linkText := fmt.Sprintf("%s - %s \\[%s\\]", demoFilename.Mode(), participants, demoFilename.Map())
-		line := fmt.Sprintf("`%s` - [%s](%s)", timestamp, linkText, demo.DownloadUrl)
+		line := fmt.Sprintf("`%s` - [%s](%s) @ %s", timestamp, linkText, demo.DownloadUrl, demo.QtvAddress)
 		responseLines = append(responseLines, line)
 	}
 

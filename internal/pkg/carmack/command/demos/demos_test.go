@@ -24,7 +24,7 @@ func TestContentFromDemos(t *testing.T) {
 
 	expect := strings.Join([]string{
 		"**Demo search**: found 1 demo(s)",
-		"`0001-01-01 00:00`: [duel - **xantom vs bro** \\[dm6\\]](http://beta:28000/dl/demos/duel_xantom_vs_bro[dm6]221028-0355.mvd)",
+		"`0001-01-01 00:00` - [duel - xantom vs bro \\[dm6\\]](http://beta:28000/dl/demos/duel_xantom_vs_bro[dm6]221028-0355.mvd) @ beta:28000",
 	}, "\n")
 
 	assert.Equal(t, expect, demoCmd.ContentFromDemos(demos))
