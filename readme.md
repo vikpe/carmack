@@ -4,11 +4,12 @@
 
 ## Commands
 
-| command             | description                                     |
-|---------------------|-------------------------------------------------|
-| `/find NAME`        | Find client (player, spectator or QTV spectator |
-| `/server HOST:PORT` | Get server info                                 |
-| `/stream`           | List current streams                            |
+| command    | description                                     |
+|------------|-------------------------------------------------|
+| `/demos`   | Find demos                                      |
+| `/find`    | Find client (player, spectator or QTV spectator |
+| `/server`  | Get server info                                 |
+| `/streams` | List current streams                            |
 
 ## Related projects
 
